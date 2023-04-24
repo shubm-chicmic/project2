@@ -1,5 +1,6 @@
 package com.example.AdminPanel.Controller;
 
+import com.example.AdminPanel.Entity.Message;
 import com.example.AdminPanel.Entity.UserDto;
 import com.example.AdminPanel.Service.RolesService;
 import jakarta.servlet.http.HttpServletRequest;
@@ -13,6 +14,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.client.RestTemplate;
+import org.springframework.web.util.UriComponentsBuilder;
 
 @Controller
 public class ProcessController {
@@ -23,6 +25,7 @@ public class ProcessController {
     @Autowired
     RestTemplate restTemplate;
 
+    @Message("Admin Added a Role")
     @PostMapping("/addRoles")
     @ResponseBody
     public void addRoles(@RequestParam String role) {
@@ -50,12 +53,20 @@ public class ProcessController {
         String sortBy = request.getParameter("sortBy");
         String order = request.getParameter("order");
 
-        String getUsersUrl = url + "/suspendUser?id=" + id;
+        String getUsersUrl = url + "/suspendUser";
+        UriComponentsBuilder builder = UriComponentsBuilder.fromUriString(getUsersUrl).queryParam("id", id);
+        getUsersUrl = builder.buildAndExpand(getUsersUrl).toUri().toString();
         System.out.println(getUsersUrl);
         Boolean status = restTemplate.getForObject(getUsersUrl, Boolean.class);
-
-
-        return "redirect:/users?search="+search + "&pageNumber=" + pageNo + "&sortBy=" + sortBy + "&order=" + order;
+        getUsersUrl = "/users";
+         builder = UriComponentsBuilder.fromUriString(getUsersUrl)
+                .queryParam("pageNumber", pageNo)
+                 .queryParam("search", search)
+                .queryParam("sortBy", sortBy)
+                .queryParam("order",order);
+        getUsersUrl = builder.buildAndExpand(getUsersUrl).toUri().toString();
+        return "redirect:" + getUsersUrl;
+        //return "redirect:/users?search="+search + "&pageNumber=" + pageNo + "&sortBy=" + sortBy + "&order=" + order;
     }
     @RequestMapping("/searchData")
     public String searchUserData(HttpServletRequest request) {
@@ -71,6 +82,11 @@ public class ProcessController {
 
         order = (order.equals("1") ? "0" : "1");
         return "redirect:/users?sortBy=" + sortBy + "&order=" + order + "&pageNumber=" + pageNo + "&search=" + search;
+    }
+    @RequestMapping("/userLogout")
+    public String userLogout() {
+
+        return "redirect:/";
     }
 
 

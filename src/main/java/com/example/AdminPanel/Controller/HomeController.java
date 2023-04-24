@@ -1,6 +1,6 @@
 package com.example.AdminPanel.Controller;
 
-import com.example.AdminPanel.Entity.UserDto;
+import com.example.AdminPanel.Entity.Message;
 import com.example.AdminPanel.Models.UserUuid;
 import com.example.AdminPanel.Models.Users;
 import com.example.AdminPanel.Service.RolesService;
@@ -8,17 +8,10 @@ import com.example.AdminPanel.Service.UserService;
 import jakarta.servlet.http.HttpSession;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
-import org.springframework.core.ParameterizedTypeReference;
-import org.springframework.http.*;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
-import org.springframework.web.bind.annotation.*;
+import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.client.RestTemplate;
-
-import java.security.Principal;
-import java.sql.Driver;
-import java.util.Arrays;
-import java.util.List;
 
 
 @Controller
@@ -31,6 +24,8 @@ public class HomeController {
     RestTemplate restTemplate;
     @Value("${mevron.server}")
     String url;
+
+    @Message("Visited Home Page")
     @RequestMapping("/")
     public String homePage(HttpSession session, Model model) {
 
@@ -45,6 +40,7 @@ public class HomeController {
 
         return "index";
     }
+    @Message("Viewed Driver's profile")
     @RequestMapping("driverOverview")
     public String driverOverview() {
         return "driver-overview";

@@ -2,7 +2,6 @@ package com.example.AdminPanel.Controller;
 
 
 import com.example.AdminPanel.Entity.UserDto;
-import com.example.AdminPanel.Models.UserUuid;
 import com.example.AdminPanel.Models.Users;
 import com.example.AdminPanel.Service.UserService;
 import jakarta.servlet.http.Cookie;
@@ -15,20 +14,21 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.*;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
-import org.springframework.web.bind.annotation.*;
+import org.springframework.web.bind.annotation.ModelAttribute;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.client.RestTemplate;
 import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.util.UriComponentsBuilder;
 
 import java.io.IOException;
-import java.net.http.HttpRequest;
-import java.net.http.HttpResponse;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.security.Principal;
-import java.util.*;
-import java.util.stream.Collectors;
+import java.util.Arrays;
+import java.util.List;
 
 @Controller
 public class UserController {
@@ -177,13 +177,7 @@ public class UserController {
     @RequestMapping("/addDriverByAdmin")
     public String addDriverByAdmin(UserDto userDto) {
         String getUsersUrl = url + "/processDriverRegister";
-//         create request body
-//        JSONObject jsonObject = new JSONObject();
-//        jsonObject.put("fname", userDto.getFirstName());
-//        jsonObject.put("lname", userDto.getLastName());
-//        jsonObject.put("phone", userDto.getPhone());
-//        jsonObject.put("email", userDto.getEmail());
-//        jsonObject.put("city", userDto.getCity());
+
         UriComponentsBuilder builder = UriComponentsBuilder.fromUriString(getUsersUrl)
                 // Add query parameter
                 .queryParam("fname", userDto.getFirstName())
@@ -196,19 +190,6 @@ public class UserController {
         getUsersUrl = builder.buildAndExpand(getUsersUrl).toUri().toString();
         String response = restTemplate.getForObject(getUsersUrl, String.class);
 
-// set headers
-//        HttpHeaders headers = new HttpHeaders();
-//        headers.setContentType(MediaType.APPLICATION_JSON);
-//        HttpEntity<String> entity = new HttpEntity<String>( headers);
-//
-//// send request and parse result
-//        ResponseEntity<String> loginResponse = restTemplate
-//                .exchange(getUsersUrl, HttpMethod.POST, entity, String.class);
-//        if (loginResponse.getStatusCode() == HttpStatus.OK) {
-//            // JSONObject userJson = new JSONObject(loginResponse.getBody());
-//        } else if (loginResponse.getStatusCode() == HttpStatus.UNAUTHORIZED) {
-//            // nono... bad credentials
-//        }
         return "add-driver";
     }
 
