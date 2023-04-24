@@ -1,7 +1,9 @@
 package com.example.AdminPanel.Entity;
 
+import jakarta.servlet.http.HttpServletRequest;
 import lombok.extern.slf4j.Slf4j;
 import org.aspectj.lang.JoinPoint;
+import org.aspectj.lang.annotation.Around;
 import org.aspectj.lang.annotation.Aspect;
 import org.aspectj.lang.annotation.Before;
 import org.aspectj.lang.annotation.Pointcut;
@@ -18,7 +20,11 @@ public class UserLogging {
     @Before("forLogging()")
     public void beforeCall(JoinPoint joinPoint) {
         MethodSignature methodSignature =  (MethodSignature) joinPoint.getSignature();
-        String value = methodSignature.getMethod().getAnnotation(Message.class).value();
+        String value = String.valueOf(methodSignature.getMethod().getAnnotation(Message.class));
+
+        String value2 = String.valueOf(methodSignature.getMethod().getAnnotation(Data.class));
+
+        log.info(value + " " + value2);
 
     }
 }

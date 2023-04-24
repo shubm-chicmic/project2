@@ -1,10 +1,10 @@
 package com.example.AdminPanel.Controller;
 
+import com.example.AdminPanel.Entity.Data;
 import com.example.AdminPanel.Entity.Message;
-import com.example.AdminPanel.Entity.UserDto;
 import com.example.AdminPanel.Service.RolesService;
 import jakarta.servlet.http.HttpServletRequest;
-import jakarta.servlet.http.HttpSession;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Controller;
@@ -15,6 +15,9 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.client.RestTemplate;
 import org.springframework.web.util.UriComponentsBuilder;
+
+
+@Slf4j
 
 @Controller
 public class ProcessController {
@@ -33,13 +36,18 @@ public class ProcessController {
     }
 
     //softDelete
+    @Message("Admin SoftDelete User : ")
     @RequestMapping("/softDelete")
     public String softDelete(HttpServletRequest request) {
         String id = request.getParameter("id");
         String getUsersUrl = url + "/softDeleteUser?id=" + id;
         System.out.println(getUsersUrl);
         Boolean status = restTemplate.getForObject(getUsersUrl, Boolean.class);
+        @Data("id")
+        String name = "abcdef";
 
+//        ColorLogger colorLogger = new ColorLogger();
+        log.info(name);
         return "redirect:/users";
     }
 
