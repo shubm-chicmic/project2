@@ -1,6 +1,7 @@
 package com.example.AdminPanel.Controller;
 
 
+import com.example.AdminPanel.Entity.Message;
 import com.example.AdminPanel.Entity.UserDto;
 import com.example.AdminPanel.Models.Users;
 import com.example.AdminPanel.Service.UserService;
@@ -90,6 +91,8 @@ public class UserController {
         return "user-profile";
     }
     @RequestMapping("/users")
+    @Message("Admin viewed All users")
+
     public String Users(Model model, HttpServletRequest request) {
         System.out.println("inside Users ");
         String pageNumber = request.getParameter("pageNumber");
@@ -131,6 +134,8 @@ public class UserController {
     }
     //diver rider update
     @RequestMapping("/userProfile")
+    @Message("User Profile Viewed by Admin")
+
     public String userProfile(HttpServletRequest request, Model model) {
         String id = request.getParameter("id");
         System.out.println("id = " + id);
@@ -144,6 +149,8 @@ public class UserController {
     }
 
     @RequestMapping("/updateUserProfile")
+    @Message("User Profile Updated by Admin")
+
     public String updateUserProfile(UserDto userDto) {
 
 
@@ -171,10 +178,14 @@ public class UserController {
 
     //Add driver
     @RequestMapping("addDriver")
+    @Message("Admin Visited the Page to add a Driver")
+
     public String addDriver(){
         return "add-driver";
     }
     @RequestMapping("/addDriverByAdmin")
+    @Message("New Driver Added Successfully")
+
     public String addDriverByAdmin(UserDto userDto) {
         String getUsersUrl = url + "/processDriverRegister";
 

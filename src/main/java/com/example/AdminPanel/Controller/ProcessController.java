@@ -36,7 +36,8 @@ public class ProcessController {
     }
 
     //softDelete
-    @Message("Admin SoftDelete User : ")
+    @Message("Admin softDelete a Driver")
+
     @RequestMapping("/softDelete")
     public String softDelete(HttpServletRequest request) {
         String id = request.getParameter("id");
@@ -54,6 +55,8 @@ public class ProcessController {
 
     //SUSPEND
     @RequestMapping("/suspend")
+    @Message("Admin Suspended a User")
+
     public String userSuspend(HttpServletRequest request, Model model) {
         String id = request.getParameter("id");
         String search = request.getParameter("search");
@@ -77,11 +80,13 @@ public class ProcessController {
         //return "redirect:/users?search="+search + "&pageNumber=" + pageNo + "&sortBy=" + sortBy + "&order=" + order;
     }
     @RequestMapping("/searchData")
+    @Message("Admin Search Data")
     public String searchUserData(HttpServletRequest request) {
         String search = request.getParameter("search");
         return "redirect:/users?search="+search;
     }
     @RequestMapping("/sortData")
+    @Message("Admin sorted the user data")
     public String sortData(HttpServletRequest request) {
         String sortBy = request.getParameter("sortBy");
         String order = request.getParameter("order");
@@ -92,6 +97,7 @@ public class ProcessController {
         return "redirect:/users?sortBy=" + sortBy + "&order=" + order + "&pageNumber=" + pageNo + "&search=" + search;
     }
     @RequestMapping("/userLogout")
+    @Message("Admin Logout")
     public String userLogout() {
 
         return "redirect:/";
