@@ -13,16 +13,24 @@ import org.aspectj.lang.annotation.Before;
 import org.aspectj.lang.annotation.Pointcut;
 import org.aspectj.lang.reflect.MethodSignature;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
+import org.springframework.web.client.RestTemplate;
 
 @Slf4j
 @Aspect
 @Component
 
 public class UserLogging {
-
+    @Autowired
+    UserService userService;
+    @Autowired
+    RestTemplate restTemplate;
     @Autowired
     UserLoggingRepo userLoggingRepo;
+    @Value("${mevron.server}")
+    String mevronUrl;
+
     @Pointcut("execution(* com.example.AdminPanel.Controller.*.*(..))")
     public void forLogging(){};
     @Before("forLogging()")
@@ -41,7 +49,15 @@ public class UserLogging {
               if(tempArg instanceof HttpServletRequest){
                   HttpServletRequest request = (HttpServletRequest)  tempArg;
                   url = request.getServletPath();
-                  value += (request.getParameter("id"));
+                  String id  = request.getParameter("id");
+                  if(id != null) {
+                      String getUserUrl = mevronUrl + "/getUserById/" + id;
+                      log.info(getUserUrl);
+                      UserDto userDto = restTemplate.getForObject(getUserUrl, UserDto.class);
+
+
+                      value += userDto.getEmail();
+                  }
               }
           }
           UsersActivity usersActivity = UsersActivity.builder().message(value).url(url).build();

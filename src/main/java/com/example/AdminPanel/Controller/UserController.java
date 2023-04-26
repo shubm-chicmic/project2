@@ -4,6 +4,8 @@ package com.example.AdminPanel.Controller;
 import com.example.AdminPanel.Entity.Message;
 import com.example.AdminPanel.Entity.UserDto;
 import com.example.AdminPanel.Models.Users;
+import com.example.AdminPanel.Models.UsersActivity;
+import com.example.AdminPanel.Service.UserActivityService;
 import com.example.AdminPanel.Service.UserService;
 import jakarta.servlet.http.Cookie;
 import jakarta.servlet.http.HttpServletRequest;
@@ -36,6 +38,8 @@ public class UserController {
     @Autowired
     UserService userService;
     @Autowired
+    UserActivityService userActivityService;
+    @Autowired
     RestTemplate restTemplate;
     @Value("${mevron.server}")
     String url;
@@ -43,15 +47,38 @@ public class UserController {
     String imagePath;
 
     @RequestMapping("/dashboard")
+    @Message("Admin visited dashboard ")
 
     public String adminDashboard(HttpSession session, Model model) {
+        String getUsersUrl = url + "/getTotalDrivers";
+        int TotalDrivers =  restTemplate.getForObject(getUsersUrl, Integer.class);
+        getUsersUrl = url + "/getTotalRiders";
+        int TotalRiders =  restTemplate.getForObject(getUsersUrl, Integer.class);
+        getUsersUrl = url + "/getTotalUsers";
+        int TotalUsers =  restTemplate.getForObject(getUsersUrl, Integer.class);
+        getUsersUrl = url + "/getTotalActiveUsers";
+        int TotalActiveUsers =  restTemplate.getForObject(getUsersUrl, Integer.class);
+        getUsersUrl = url + "/getTotalSoftDeletedUsers";
+        int TotalSoftDeletedUsers =  restTemplate.getForObject(getUsersUrl, Integer.class);
 
         System.out.println("\u001B[33m" + "adminDashboard " + "\u001B[0m");
+
+        List<UsersActivity> usersActivities = userActivityService.getAllActivity(6);
+        System.out.println(usersActivities);
+        model.addAttribute("activities", usersActivities);
+        model.addAttribute("TotalDrivers",TotalDrivers);
+        model.addAttribute("TotalRiders",TotalRiders);
+        model.addAttribute("TotalUsers",TotalUsers);
+        model.addAttribute("TotalActiveUsers",TotalActiveUsers);
+        model.addAttribute("TotalSoftDeletedUsers",TotalSoftDeletedUsers);
+
 
         return "dashboard";
     }
 
     @RequestMapping("/profile")
+    @Message("Admin visited Profile Page ")
+
     public String profile(Model model, Principal principal) {
         Users users = userService.getUserByEmail(principal.getName());
         model.addAttribute("User", users);
@@ -59,6 +86,8 @@ public class UserController {
     }
 
     @PostMapping("/updateProfile")
+    @Message("Profile updated By Admin ")
+
     public String updateProfile(
             @RequestParam("imageUrl") MultipartFile multipartFile,
             @ModelAttribute("userDto") UserDto userDto, Model model, HttpServletResponse response
@@ -91,7 +120,7 @@ public class UserController {
         return "user-profile";
     }
     @RequestMapping("/users")
-    @Message("Admin viewed All users")
+    @Message("Admin viewed All users ")
 
     public String Users(Model model, HttpServletRequest request) {
         System.out.println("inside Users ");
@@ -134,7 +163,7 @@ public class UserController {
     }
     //diver rider update
     @RequestMapping("/userProfile")
-    @Message("User Profile Viewed by Admin")
+    @Message("Admin viewed User Profile of ")
 
     public String userProfile(HttpServletRequest request, Model model) {
         String id = request.getParameter("id");
@@ -149,7 +178,7 @@ public class UserController {
     }
 
     @RequestMapping("/updateUserProfile")
-    @Message("User Profile Updated by Admin")
+    @Message("User Profile Updated by Admin ")
 
     public String updateUserProfile(UserDto userDto) {
 
@@ -178,7 +207,7 @@ public class UserController {
 
     //Add driver
     @RequestMapping("addDriver")
-    @Message("Admin Visited the Page to add a Driver")
+    @Message("Admin Visited the Page to add a Driver ")
 
     public String addDriver(){
         return "add-driver";
@@ -203,5 +232,7 @@ public class UserController {
 
         return "add-driver";
     }
+
+
 
 }
